@@ -55,7 +55,14 @@ int main(int argc, char **argv)
 				parsedComm[i] = (char *)malloc(100);
 			}
 
-			int numOfPathElems = countForParsing(path, " ") + 1;
+			int numOfPathElems;
+			
+			if(strlen(path) == 0) {
+				numOfPathElems = 0;
+			}
+			else {
+				numOfPathElems = countForParsing(path, " ") + 1;
+			}
 			char *parsedPath[numOfPathElems];
 			for(int i = 0; i < numOfPathElems; i++) {
 				parsedPath[i] = (char *)malloc(100);
@@ -87,7 +94,7 @@ int main(int argc, char **argv)
 			}
 			else if (strncmp("cd", line, 2) == 0) {
 				if(strncmp("cd\0", line, 3) == 0) {}
-				else if(strncmp("..", parsedComm[1], 2) == 0) {
+				else if(strncmp("..", parsedComm[1], 2) == 0) {			//enter "cd .." to move up 1 directory
 					currentDir = moveCurrentDirBack(currentDir);
 					if(chdir(currentDir) == -1) {errorMessage();}
 				} 
@@ -99,7 +106,7 @@ int main(int argc, char **argv)
 			}
 			else if (strncmp("path", line, 4) == 0) {
 				if(strncmp("path\0", line, 5) == 0) {
-					strcpy(path, " ");
+					strcpy(path, "");
 				}
 				else {
 					pathArgs = strchr(line, ' ');
@@ -234,7 +241,14 @@ int main(int argc, char **argv)
 				parsedComm[i] = (char *)malloc(100);
 			}
 
-			int numOfPathElems = countForParsing(path, " ") + 1;
+			int numOfPathElems;
+			
+			if(strlen(path) == 0) {
+				numOfPathElems = 0;
+			}
+			else {
+				numOfPathElems = countForParsing(path, " ") + 1;
+			}
 			char *parsedPath[numOfPathElems];
 			for(int i = 0; i < numOfPathElems; i++) {
 				parsedPath[i] = (char *)malloc(100);
@@ -357,6 +371,9 @@ int main(int argc, char **argv)
 								}
 							}
 							strcpy(parsedRedirectComm[0], command);
+						}
+						if(numOfPathElems == 0) {
+							errorMessage();
 						}
 						dup2(saved_stdout, STDOUT_FILENO);
 						close(saved_stdout);
